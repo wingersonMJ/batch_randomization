@@ -11,10 +11,11 @@ The collection of **biological samples**, such as blood plasma or serum, provide
 **Batch effects** occur when samples processed in different batches produce systematically different results. Each batch analyzed using the Single Molecule Array (SIMOA) is subject to a certain degree of error or variability. In theory, the same sample could be analyzed in multiple batches and return slightly different values each time. To minimize batch effects, three approaches are commonly used:
 1. Plate callibrators help reduce measurment error for each plate.
 2. Internal controls, either pooled or unpooled, are included on every plate to quanitfy differences between plates.
-3. **Batch randomization** ensures that samples are assigned to different batches in a way that reduces the risk of disproportionate distribution of key participant characteristics (e.g., demographics, injury characteristics).
+3. **Batch randomization** ensures that samples are assigned to different batches in a way that reduces the risk of disproportionate distribution of relevant participant characteristics (e.g., demographics, injury characteristics).
 
 ## Batch randomization
 A simple randomization scheme can be used to assign samples to different batches. *In theory*, simple randomization is effective when the number of batches and batch sizes are large. However, this rarely reflects real-world research on biological samples, where batch sizes are limited and the number of batches is small.  
+<br>
 For example, a 5-year longitudinal study in our lab may process 8–12 batches, with each batch containing 34 samples. In such cases, simple randomization may not be sufficient to ensure that batches remain balanced across relevant covariates.
 
 ## Randomization and propensity score checking
@@ -22,22 +23,22 @@ To address the issue of imbalanced randomization, we implement a two-step approa
 1. Randomly assign samples to batches using simple randomization.
 2. Evaluate the success of the randomization using propensity scores.
 
-A propensity score represents the probability that a sample belongs to a particular batch, given known sample characteristics (e.g., age, biological sex). High propensity scores indicate that batch assignment is not truly random, and that batch membership can be predicted using these characteristics. Low propensity scores suggest that the sample characteristics are well-balanced across batches, making batch assignment less predictable.  
+A **propensity score** represents the probability that a sample belongs to a particular batch, given known sample characteristics (e.g., age, biological sex). High propensity scores indicate that batch assignment is not truly random, and that batch membership can be predicted using these characteristics. Low propensity scores suggest that the sample characteristics are well-balanced across batches, making batch assignment less predictable.  
 
 By iterating this process multiple times, we generate several potential randomization schemes, each with an associated propensity score. Researchers can then select a randomization scheme that optimally balances covariates across batches.
 
 ## Longitudinal data as a unique challenge:
 
-Longitudinal studies—where samples are collected from the same participant across multiple time points—present an additional challenge: ideally, all samples from a single participant should be processed in the same batch to minimize within-subject variability.
+Longitudinal studies — where samples are collected from the same participant across multiple time points — present an additional challenge: ideally, all samples from a single participant should be processed in the same batch to minimize within-subject variability.
 
-This constraint means that simple randomization is not feasible, as it does not account for repeated samples from the same participant. Instead, any randomization scheme must ensure that:
+This constraint means that simple randomization is not feasible, as it does not account for repeated samples from the same participant. Instead, the randomization scheme must ensure that:
 - Samples from the same participant remain within the same batch
 - The number of samples per participant (which may vary due to compliance or attrition) is accounted for
 - The maximum batch size is not exceeded
 
 
 ## Summary
-Batch effects introduce bias when analyzing biological samples, but randomization strategies can help mitigate these issues. A two-step approach of randomizing samples to batches and then evaluating balance using propensity scores can improve the stability of batch assignments.
+Batch effects introduce bias when analyzing biological samples, but randomization strategies can help mitigate these issues. A two-step approach of randomizing samples to batches and then evaluating balance using propensity scores can improve the stability of batch assignments. Longitudinal study designs require some additional considerations.
 
 
 
