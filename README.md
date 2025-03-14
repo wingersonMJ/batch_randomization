@@ -43,7 +43,13 @@ If outliers exist, check if their absolute values exist in squashed regions of t
 
 <br>
 If the individual sample SD is large, then the concentrations obtained for that sample across reps were discrepant. This could explain why it is an outlier. 
+<br>
 
+**Checking sample processor**
+<br>
+Track the team member who processed the sample (centrifuged and aliquoted), then check if patterns emerge between team members.  
+`sns.stripplot(x='Processor', y='Z-score', data=data)`
+<img src="figs/stripplot.png" alt="Calibration Graph" width="1000">
 ---
 **Other notes for MJ**  
 Neuro 4-plex (N4PA; GFAP, Tau, UCH-L1, NF-Light): 34 tests, 6-month shelf life  
