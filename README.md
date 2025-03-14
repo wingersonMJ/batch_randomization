@@ -5,7 +5,7 @@ This project provides a structured method and tool for randomizing participant b
 
 ## Purpose 
 
-## Methods
+## How it works  
 
 ## Use example 
 
@@ -42,18 +42,22 @@ If outliers exist, check if their absolute values exist in squashed regions of t
 | 002          | 2.20                  | 8.90                  | 5.55               | 4.74               |
 
 <br>
-If the individual sample SD is large, then the concentrations obtained for that sample across reps were discrepant. This could explain why it is an outlier. 
+If the individual sample SD is large, then the concentrations obtained for that sample across reps were discrepant. This could explain why it is an outlier.  
+<br>
 <br>
 
-**Checking sample processor**
+**Checking sample processor**  
 <br>
 Track the team member who processed the sample (centrifuged and aliquoted), then check if patterns emerge between team members.  
 `sns.stripplot(x='Processor', y='Z-score', data=data)`  
 <img src="figs/stripplot.png" alt="Calibration Graph" width="400">
 <br> 
 
-**Checking the number of freeze/thaw cycles**
-
+**Checking the number of freeze/thaw cycles**  
+<br>
+Each freeze/thaw cycle has a risk of damaging the cell membrane. Damaged cell membranes can affect the stability of measurements, particularly because it can  artifically increase the degree of oxidative stress. >3 cycles could be concerning.  
+<br>
+<br>
 
 ---
 **Other notes for MJ**  
