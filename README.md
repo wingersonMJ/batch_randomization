@@ -40,8 +40,8 @@ This constraint means that simple randomization is not feasible, as it does not 
 - The maximum batch size is not exceeded
 
 ## Example plate layout:
-Included below is an example plate layout containing calibrators, internal plate controls, and participant samples. This example plate layout is available to download here. 
-<img src="figs/example_plate_layout.png" alt="Example plate layout" width="400">  
+Included below is an example plate layout containing calibrators, internal plate controls, and participant samples. This example plate layout is available to download here.  
+<img src="figs/example_plate_layout.png" alt="Example plate layout" width="1000">  
 
 
 
