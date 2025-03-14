@@ -24,8 +24,15 @@ $\sigma$ = standard deviation of dataset
 **Checking cumulative calibration graph**
 
 
+<img src="figs/calibration_graph.png" alt="Calibration Graph" width="1000">
+
 ---
 **Other notes for MJ**  
 Neuro 4-plex (N4PA; GFAP, Tau, UCH-L1, NF-Light): 34 tests, 6-month shelf life
 Cytokine 4-plex (Cyto 4P; IL1-Beta, IL-6, IL-10, TNF-Alpha): 34 tests, 12-month shelf life
 BDNF: 68 tests across 2 plates, 6-month shelf life
+
+
+<!--
+![calibration graph](figs/calibration_graph.png)
+-->
