@@ -4,12 +4,13 @@ Wingerson, MJ
 This project provides a structured method and tool for randomizing participant biological samples across plates or batches while numerically evaluating the balance of key participant covariates post-randomization. The goal is to mitigate batch effects commonly encountered in the analysis of biological samples. This project, developed with support from Patrick Carry and Carson Keeter, builds upon their existing [randomization scheme](https://github.com/carryp/PS-Batch-Effect) by including a longitudinal component. 
 
 ## Purpose 
+Collection of biological samples, such as blood plasma or serum, are beneficial for objectively measuring physiological responses to injury and rehabilitation. However, processing, long-term storage, and analysis are wraught with opportunities to introduce bias into your results (see [Troubleshooting](#troubleshooting) below for a list of things that can go wrong)
 
 ## How it works  
 
 ## Use example 
 
-## Troubleshooting 
+# Troubleshooting 
 
 **Checking for outliers**
 1. Visually using a histogram `plt.hist(x)`  
@@ -49,13 +50,14 @@ If the individual sample SD is large, then the concentrations obtained for that 
 **Checking sample processor**  
 <br>
 Track the team member who processed the sample (centrifuged and aliquoted), then check if patterns emerge between team members.  
+<img src="figs/stripplot.png" alt="Calibration Graph" width="400">  
 `sns.stripplot(x='Processor', y='Z-score', data=data)`  
-<img src="figs/stripplot.png" alt="Calibration Graph" width="400">
 <br> 
 
 **Checking the number of freeze/thaw cycles**  
 <br>
 Each freeze/thaw cycle has a risk of damaging the cell membrane. Damaged cell membranes can affect the stability of measurements, particularly because it can  artifically increase the degree of oxidative stress. >3 cycles could be concerning.  
+Check with the team in charge of long-term sample storage for the number of freeze/thaw cycles.  
 <br>
 <br>
 
