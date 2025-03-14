@@ -111,7 +111,7 @@ def propensity_scores(data, subject_id, covariates, randomized_assignments):
 
 
 # Data 
-file_path = 'C:\\Users\\wingersm\\OneDrive - The University of Colorado Denver\\Desktop\\Python Projects\\2.0 Blood Randomization\\Data\\Blood_randomization_3.11.25.xlsx'
+file_path = 'your_path'
 df = pd.read_excel(file_path)
 
 # Adjust columns
@@ -167,22 +167,6 @@ summary2 = TableOne(
 print(summary2.tabulate(tablefmt = "fancy_grid"))
 
 # Save
-save_path = 'C:\\Users\\wingersm\\OneDrive - The University of Colorado Denver\\Desktop\\Python Projects\\2.0 Blood Randomization\\Data\\Blood_randomization_3.11.25_results.xlsx'
+save_path = 'save_path'
 data.to_excel(save_path, index=False)
 print("saved!")
-
-
-data_bdnf = data.copy()
-data_bdnf = data_bdnf[data_bdnf['Batch_Assignment'] !=5]
-data_bdnf['Batch_Assignment'] = data_bdnf['Batch_Assignment'].replace({2: 1})
-data_bdnf['Batch_Assignment'] = data_bdnf['Batch_Assignment'].replace({4: 3})
-
-summary3 = TableOne(
-    data_bdnf, 
-    columns= ['site', 'blinded_random_assignment', 'doi_to_v1', 'fivep_sex', 'nVisits'],
-    categorical= ['site', 'blinded_random_assignment', 'fivep_sex'],
-    continuous= ['doi_to_v1', 'nVisits'], 
-    groupby='Batch_Assignment',
-    pval=True,
-    decimals=2)
-print(summary3.tabulate(tablefmt = "fancy_grid"))
