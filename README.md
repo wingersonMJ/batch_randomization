@@ -25,7 +25,7 @@ $\sigma$ = standard deviation of dataset
 The calibration graph plots the known value for the calibrators on the x-axis and the value estimated by SIMOA on the y-axis.  
 This linear or non-linear relationship is used to 'calibrate', or adjust, the actual participant values to reduce measurement error.
 
-<img src="figs/calibration_graph.png" alt="Calibration Graph" width="1000">
+<img src="figs/calibration_graph.jpg" alt="Calibration Graph" width="1000">
 
 ---
 **Other notes for MJ**  
