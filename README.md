@@ -48,8 +48,13 @@ If the individual sample SD is large, then the concentrations obtained for that 
 **Checking sample processor**
 <br>
 Track the team member who processed the sample (centrifuged and aliquoted), then check if patterns emerge between team members.  
-`sns.stripplot(x='Processor', y='Z-score', data=data)`
-<img src="figs/stripplot.png" alt="Calibration Graph" width="1000">
+`sns.stripplot(x='Processor', y='Z-score', data=data)`  
+<img src="figs/stripplot.png" alt="Calibration Graph" width="400">
+<br> 
+
+**Checking the number of freeze/thaw cycles**
+
+
 ---
 **Other notes for MJ**  
 Neuro 4-plex (N4PA; GFAP, Tau, UCH-L1, NF-Light): 34 tests, 6-month shelf life  
