@@ -18,14 +18,31 @@ $z = \frac{x - \mu}{\sigma}$
 $x$ = individual value  
 $\mu$ = mean of dataset  
 $\sigma$ = standard deviation of dataset  
-*Interpretation of z-scores: Subject data normalized to represent the number of standard deviations they are from the mean, where a value of 0 indicates 'exactly at the mean'* 
+*Interpretation of z-scores:* Subject data normalized to represent the number of standard deviations they are from the mean, where a value of 0 indicates 'exactly at the mean'
 <br>
 
-**Checking cumulative calibration graph**
+**Checking cumulative calibration graph**  
+<br>
 The calibration graph plots the known value for the calibrators on the x-axis and the value estimated by SIMOA on the y-axis.  
-This linear or non-linear relationship is used to 'calibrate', or adjust, the actual participant values to reduce measurement error.
+This linear or non-linear relationship is used to 'calibrate', or fit/adjust, the actual participant values to reduce measurement error.
 
 <img src="figs/calibration_graph.jpg" alt="Calibration Graph" width="1000">
+
+Lower and higher values are usually squashed, or level off, because the SIMOA fails to accurately measure high and low concentrations.  
+If outliers exist, check if their absolute values exist in squashed regions of the calibration graph.
+<br>
+<br>
+
+**Checking values for samples run in multiple reps**  
+<br>
+*Run in multiple reps:* Some samples will be analyzed more than once by the SIMOA. For example, BDNF is run in 2 reps. This means you will have two BDNF concentration values for each sample. You use the mean of those values in the analysis, but a SD can also be calculated for that individual sample.  
+| Subject ID   | Concentration Rep #1  | Concentration Rep #2  | Mean Concentration | Standard Deviation |
+| ------------ | --------------------- | --------------------- | ------------------ | ------------------ |
+| 001          | 0.85                  | 0.81                  | 0.83               | 0.03               |
+| 002          | 2.20                  | 8.90                  | 5.55               | 4.74               |
+
+<br>
+If the individual sample SD is large, then the concentrations obtained for that sample across reps were discrepant. This could explain why it is an outlier. 
 
 ---
 **Other notes for MJ**  
