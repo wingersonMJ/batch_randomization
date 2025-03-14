@@ -5,7 +5,8 @@ This project provides a structured method and tool for randomizing participant b
 <br>
 **This project, developed with support from Patrick Carry and Carson Keeter, builds upon their existing [randomization scheme](https://github.com/carryp/PS-Batch-Effect) by including a longitudinal component.**  
 
-# Overview 
+# Overview:
+
 The collection of **biological samples**, such as blood plasma or serum, provides an objective means of measuring physiological responses to injury and rehabilitation. However, **sample processing, long-term storage, and analysis** introduce multiple opportunities for bias (see [Troubleshooting](#troubleshooting) below for potential issues). One common issue, which can be mitigated with moderate pre-planning, is **batch effects**.  
 
 **Batch effects** occur when samples processed in different batches produce systematically different results. Each batch analyzed using the Single Molecule Array (SIMOA) is subject to a certain degree of error or variability. In theory, the same sample could be analyzed in multiple batches and return slightly different values each time. To minimize batch effects, three approaches are commonly used:
@@ -13,12 +14,14 @@ The collection of **biological samples**, such as blood plasma or serum, provide
 2. Internal controls, either pooled or unpooled, are included on every plate to quanitfy differences between plates.
 3. **Batch randomization** ensures that samples are assigned to different batches in a way that reduces the risk of disproportionate distribution of relevant participant characteristics (e.g., demographics, injury characteristics).
 
-## Batch randomization
+## Batch randomization:
+
 A simple randomization scheme can be used to assign samples to different batches. *In theory*, simple randomization is effective when the number of batches and batch sizes are large. However, this rarely reflects real-world research on biological samples, where batch sizes are limited and the number of batches is small.  
 <br>
 For example, a 5-year longitudinal study in our lab may process 8–12 batches, with each batch containing 34 samples. In such cases, simple randomization may not be sufficient to ensure that batches remain balanced across relevant covariates.
 
-## Randomization and propensity score checking
+## Randomization and propensity score checking:
+
 To address the issue of imbalanced randomization, we implement a two-step approach: 
 1. Randomly assign samples to batches using simple randomization.
 2. Evaluate the success of the randomization using propensity scores.
@@ -36,15 +39,20 @@ This constraint means that simple randomization is not feasible, as it does not 
 - The number of samples per participant (which may vary due to compliance or attrition) is accounted for
 - The maximum batch size is not exceeded
 
+## Example plate layout:
+Included below is an example plate layout containing calibrators, internal plate controls, and participant samples. This example plate layout is available to download here. 
+<img src="figs/example_plate_layout.png" alt="Example plate layout" width="400">  
 
-## Summary
+
+
+## Summary:
 Batch effects introduce bias when analyzing biological samples, but randomization strategies can help mitigate these issues. A two-step approach of randomizing samples to batches and then evaluating balance using propensity scores can improve the stability of batch assignments. Longitudinal study designs require some additional considerations.
 
 
 
-# How it works  
+# How it works:  
 To be completed later...
-# Use example 
+# Use example:
 To be completed later...
 
 
@@ -90,7 +98,7 @@ If the individual sample SD is large, then the concentrations obtained for that 
 **Checking sample processor**  
 <br>
 Track the team member who processed the sample (centrifuged and aliquoted), then check if patterns emerge between team members.  
-<img src="figs/stripplot.png" alt="Calibration Graph" width="400">  
+<img src="figs/stripplot.png" alt="Example of processor bias" width="400">  
 `sns.stripplot(x='Processor', y='Z-score', data=data)`  
 <br> 
 
