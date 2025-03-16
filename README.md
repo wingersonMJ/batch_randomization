@@ -93,7 +93,56 @@ for subj, visits in subjects:
 
 ## propensity_scores  
 ***What is a propensity score?***  
-A propensity score is a conditional probability of belonging to a batch given a set of covariates. 
+A propensity score is a conditional probability of belonging to a batch given a set of covariates. In other words, it is the probability of a subject belonging to a certain group based on known characteristics about that subject. For example, if boys are more likely to be in batch #1, and girls in batch #2, then a boy subject would have a high conditional probability of belonging to batch #1 given sex.  
+<br> 
+
+*Formula:*  
+$e(X)=Pr(Z=j∣X)$  
+<br>
+
+$e(X)$ = propensity score given covariates $X$  
+$Pr(Z=j∣X)$ = probability of belonging to a batch $j$ given covariates $X$  
+<br>
+
+In the context of this project, identifying batch randomizations with low overall propensity scores means that pre-determined subject characteristics are well-distributed across batches.  
+<br>
+
+***Expected inputs:***  
+<br>
+
+
+
+***Key operations***  
+<br>
+For each batch, create a binary variable to represent if the subject is in the batch or not. 
+`
+for batch in iteration:
+            temp_data = data.copy()
+            temp_data['batch'] = temp_data[subject_id].isin(batch).astype(int)
+`  
+
+Use a logistic regression to predict the probability of belonging to a batch given covariates.  
+`
+model = LogisticRegression()
+            model.fit(temp_data[covariates], temp_data['batch'])
+            temp_data['propensity_score'] = model.predict_proba(temp_data[covariates])[:, 1]
+`  
+
+Calculate the propensity score as the difference in the true value and the predicted probability for both in-batch and out-batch subjects.
+`
+in_batch = temp_data.loc[temp_data['batch'] == 1, 'propensity_score']
+            out_batch = temp_data.loc[temp_data['batch'] == 0, 'propensity_score']
+            diff = abs(in_batch.mean() - out_batch.mean())
+            batch_diffs.append(diff)
+            
+avg_balance = np.mean(batch_diffs)
+`  
+This returns a balancing metric (`batch_diffs`), which represents the propensity for in- vs out-batch membership given covariates. If covariates are properly balanced between batches, then the probability of being in-batch will be relatively equal to the probability of being out-batch. Therefore, the difference between these two scores will be very small (i.e., balanced).  
+<br>
+
+
+
+
 
 
 # Use example:
