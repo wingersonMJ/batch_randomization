@@ -156,9 +156,59 @@ data['Batch_Assignment'] = None
  `  
  <br>
 
-# Use example:
+# Use example:  
+<br>
 
+`
+# Data 
+file_path = 'your_path'
+df = pd.read_excel(file_path)
+`  
 
+Run the random assignment function. In this example, `subjectID` and `nVisits` are defined as 'id' and 'nVisits' in my dataset. The `batchSize` constraint is set to 34 samples per batch, and I desire 4 batches total.  
+
+`
+assignments = randomAssignment(
+                    data = df, 
+                    subjectID = 'id', 
+                    nVisits = 'nVisits', 
+                    seed = 1989,
+                    nIter = 50000,
+                    batchSize = 34, 
+                    nBatches = 4
+                    )
+` 
+
+Define factors for balancing.
+`covariates = ['site', 'blinded_random_assignment', 'doi_to_v1', 'fivep_sex']`   
+
+Run the propensity_scores function.
+`
+data, metrics = propensity_scores(
+                        data = df, 
+                        subject_id = 'id',
+                        covariates = covariates, 
+                        randomized_assignments = assignments)
+`  
+<br>
+
+***Check if it worked***  
+<br>
+
+A simple comparison of covariates across batches can be performed. This will return p-values for comparisons across covariates.  
+`
+summary = TableOne(
+    data, 
+    columns= ['site', 'blinded_random_assignment', 'doi_to_v1', 'fivep_sex', 'nVisits'],
+    categorical= ['site', 'blinded_random_assignment', 'fivep_sex'],
+    continuous= ['doi_to_v1', 'nVisits'], 
+    groupby='Batch_Assignment',
+    pval=True,
+    decimals=2)
+print(summary.tabulate(tablefmt = "fancy_grid"))
+`  
+
+*Note: Batch_Assignment will return nBatches+1. If you specify 4 batches, you will get 5 batches, with batch #5 representing any left-over samples not assigned to other batches. There is no batchSize constraint on the left-over group. This approach is useful when your total samples is > batchSize$*$nBatches*  
 
 
 # Troubleshooting 
