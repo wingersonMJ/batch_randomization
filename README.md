@@ -109,8 +109,11 @@ In the context of this project, identifying batch randomizations with low overal
 
 ***Expected inputs:***  
 <br>
-
-
+data = your dataset  
+subject_id = the column in your dataset that defines your subject identifier  
+covariates = a list of the covariates used for balancing  
+randomized_assignments = the output from the randomizedAssignment function above  
+<br>
 
 ***Key operations***  
 <br>
@@ -140,13 +143,20 @@ avg_balance = np.mean(batch_diffs)
 This returns a balancing metric (`batch_diffs`), which represents the propensity for in- vs out-batch membership given covariates. If covariates are properly balanced between batches, then the probability of being in-batch will be relatively equal to the probability of being out-batch. Therefore, the difference between these two scores will be very small (i.e., balanced).  
 <br>
 
+These balance scores are then averaged across all subjects and all batches.  
+<br>
 
+The function returns your original dataset, with an added column 'Batch_Assignment' for the randomized batch assignment for each subject based on which randomized iteration returned the lowest propensity score (i.e., most balanced).  
+`
+data['Batch_Assignment'] = None
+    for batch_num, group in enumerate(best_batches, start=1):
+        data.loc[data[subject_id].isin(group), 'Batch_Assignment'] = batch_num
 
-
-
+ return data, metrics_df
+ `  
+ <br>
 
 # Use example:
-To be completed later...
 
 
 
