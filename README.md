@@ -51,7 +51,51 @@ Batch effects introduce bias when analyzing biological samples, but randomizatio
 
 
 # How it works:  
-To be completed later...
+Two functions are defined in the included source code: `randomAssignment` and `propensity_scores`.  
+<br>
+
+## randomAssignment  
+Purpose: Randomize participants to batches, given a batch size constraint, number of batches, and desired iterations.  
+<br>
+***Expected inputs:***  
+data = your dataset, expecting wide format and a column defining the subject identifier and a column defining the number of samples for that subject  
+subjectID = the column for the subject identifier  
+nVisits = the column for the number of samples (or visits) for the subject  
+seed = set seed for repeatability  
+nIter = number of iterations to run  
+batchSize = maximum size for each batch  
+nBatches = number of batches desired  
+<br>
+
+***Key operations***  
+<br>
+For each iteration, generate a list of the subject identifier and the number of visits for that subject. Then, randomly shuffle that list.  
+`
+for _ in range(nIter): 
+        subjects = data[[subjectID, nVisits]].itertuples(index=False, name=None)
+        subjects = list(subjects) 
+        random.shuffle(subjects)
+`  
+<br>
+
+Outter loop: For each subject and their number of visits...  
+Inner loop: For each batch...  
+...First check if the subject can be added to that batch, respecting the total batch size constraint. If true, add to that batch and move to the next subject. If false, move to the next batch.  
+`
+for subj, visits in subjects:
+            for i in range(nBatches):
+                if batch_totals[i] + visits <= batchSize:
+                    batches[i][subj] = visits
+                    batch_totals[i] += visits
+                    break
+`  
+<br>
+
+## propensity_scores  
+***What is a propensity score?***  
+A propensity score is a conditional probability of belonging to a batch given a set of covariates. 
+
+
 # Use example:
 To be completed later...
 
