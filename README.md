@@ -1,5 +1,5 @@
 # Batch Randomization for Biological Samples in Longitudinal Data Analysis
-*Wingerson, MJ*  
+Wingerson, MJ 
 mat.wingerson@gmail.com
 
 ## Description
