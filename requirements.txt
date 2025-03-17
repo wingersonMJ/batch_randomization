@@ -1,6 +1,4 @@
-random
 pandas
-time
 numpy
 scikit-learn
 tableone

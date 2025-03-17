@@ -154,7 +154,7 @@ summary = TableOne(
 print(summary.tabulate(tablefmt = "fancy_grid"))
 
 # Summary w/out leftovers
-data_filtered = data[data['Batch_Assignment'] != (nBatches+1)]
+data_filtered = data[data['Batch_Assignment'] != 5] # nBatches+1
 summary2 = TableOne(
     data_filtered, 
     columns= covariates,

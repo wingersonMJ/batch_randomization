@@ -1,4 +1,4 @@
-﻿id,nVisits,location,interventon_group,time_to_enrollment,sex
+﻿id,nVisits,location,intervention_group,time_to_enrollment,sex
 CHCO_001,1,0,1,18,1
 CHCO_002,2,1,0,6,0
 CHCO_003,2,0,1,16,1
