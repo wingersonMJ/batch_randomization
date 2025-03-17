@@ -9,7 +9,18 @@ This project provides a structured method and tool for randomizing participant b
 
 ---
 
-# :microscope:Overview
+## 📑 Table of Contents
+
+1. [Project Overview](#microscope-project-overview)
+2. [How It Works](#hammer_and_wrench-how-it-works)
+   - [randomAssignment](#randomassignment)
+   - [propensity_scores](#propensity_scores)
+4. [Use Example](#factory-use-example)
+5. [Troubleshooting](#flashlight-troubleshooting)
+
+---
+
+# :microscope: Project Overview 
 
 The collection of **biological samples**, such as blood plasma or serum, provides an objective means of measuring physiological responses to injury and rehabilitation. However, **sample processing, long-term storage, and analysis** introduce multiple opportunities for bias (see [Troubleshooting](#troubleshooting) below for potential issues). One common issue, which can be mitigated with moderate pre-planning, is **batch effects**.
 
@@ -69,7 +80,7 @@ Batch effects introduce bias when analyzing biological samples, but randomizatio
 
 ---
 
-# :hammer_and_wrench:How It Works  
+# :hammer_and_wrench: How It Works  
 
 Two functions are defined in the included source code: `randomAssignment` and `propensity_scores`.
 
@@ -170,11 +181,11 @@ data['Batch_Assignment'] = None
 
 ---
 
-# :factory:Use example
+# :factory: Use example
 
 ```python
 # Data 
-file_path = 'your_path'
+file_path = 'example_data.csv'
 df = pd.read_excel(file_path)
 ```
 
@@ -234,7 +245,7 @@ print(summary.tabulate(tablefmt = "fancy_grid"))
 
 ---
 
-# :flashlight:Troubleshooting 
+# :flashlight: Troubleshooting 
 
 ## Check for outliers
 1. Visually using a histogram `plt.hist(x)`  
