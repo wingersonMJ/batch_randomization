@@ -27,27 +27,25 @@ To minimize batch effects, three approaches are commonly used:
 
 A simple randomization scheme can be used to assign samples to different batches. *In theory*, simple randomization is effective when the number of batches and batch sizes are large. However, this rarely reflects real-world research on biological samples, where batch sizes are limited and the number of batches is small.
 
-For example, a 5-year longitudinal study in our lab may process 8–12 batches, with each batch containing 34 samples. In such cases, simple randomization may not be sufficient to ensure that batches remain balanced across relevant covariates.
-
 ---
 
 ## Randomization and Propensity Score Checking
 
-To address the issue of imbalanced randomization, we implement a two-step approach: 
-1. Randomly assign samples to batches using simple randomization.
+To address the issue of imbalanced randomization, we implement a three-step approach: 
+1. Iteratively assign samples to batches using simple randomization.
 2. Evaluate the success of the randomization using propensity scores.
+3. Select the simple random assignment iteration with the best propensity scores. 
 
 ### What are propensity scores?
 A **propensity score** represents the probability that a sample belongs to a particular batch, given known sample characteristics (e.g., age, biological sex). 
 - High propensity scores indicate that batch assignment is not truly random, and that batch membership can be predicted using these characteristics.
 - Low propensity scores suggest that the sample characteristics are well-balanced across batches, making batch assignment less predictable.
 
-By iterating this process multiple times, we generate several potential randomization schemes, each with an associated propensity score. Researchers can then select a randomization scheme that optimally balances covariates across batches.
+By iterating this process multiple times, we generate several potential randomization schemes, each with an associated propensity score. Researchers can then select a randomization scheme with the lowest propensity score, which optimally balances covariates across batches.
 
 ---
 
 ## Longitudinal Data as a Unique Challenge
-
 Longitudinal studies — where samples are collected from the same participant across multiple time points — present an additional challenge: ideally, all samples from a single participant should be processed in the same batch to minimize within-subject variability.
 
 ### Key considerations:
@@ -100,7 +98,7 @@ for _ in range(nIter):
     random.shuffle(subjects)
 ```
 
-For each subject and their number of visits, and for each batch, add subjects iteratively if thier nVisits does not violate the total batch size constraint:
+For each subject and their number of visits, and for each batch, add subjects iteratively if their nVisits does not exceed the batch size limit:
 ```python
 for subj, visits in subjects:
             for i in range(nBatches):
@@ -142,8 +140,8 @@ for batch in iteration:
 Use a logistic regression to predict the probability of belonging to a batch given covariates:
 ```python
 model = LogisticRegression()
-            model.fit(temp_data[covariates], temp_data['batch'])
-            temp_data['propensity_score'] = model.predict_proba(temp_data[covariates])[:, 1]
+model.fit(temp_data[covariates], temp_data['batch'])
+temp_data['propensity_score'] = model.predict_proba(temp_data[covariates])[:, 1]
 ```
 
 Calculate the propensity score as the difference in the true value and the predicted probability for both in-batch and out-batch subjects:
@@ -152,7 +150,7 @@ in_batch = temp_data.loc[temp_data['batch'] == 1, 'propensity_score']
 out_batch = temp_data.loc[temp_data['batch'] == 0, 'propensity_score']
 
 diff = abs(in_batch.mean() - out_batch.mean())
-batch_diffs.append(diff)
+batch_diffs.append(diff) #store diff across all batches
           
 avg_balance = np.mean(batch_diffs)
 ```
@@ -167,7 +165,7 @@ data['Batch_Assignment'] = None
     for batch_num, group in enumerate(best_batches, start=1):
         data.loc[data[subject_id].isin(group), 'Batch_Assignment'] = batch_num
 
- return data, metrics_df
+     return data, metrics_df
  ```
 
 ---
@@ -180,7 +178,7 @@ file_path = 'your_path'
 df = pd.read_excel(file_path)
 ```
 
-Run the random assignment function. In this example, `subjectID` and `nVisits` are defined as 'id' and 'nVisits' in my dataset. The `batchSize` constraint is set to 34 samples per batch, and I desire 4 batches total:
+Run the random assignment function. In this example, `subjectID` and `nVisits` are defined as 'id' and 'nVisits' in my dataset. The batchSize constraint is set to 34 samples per batch, with 4 batches in total:
 ```python
 assignments = randomAssignment(
                     data = df, 
@@ -220,20 +218,21 @@ summary = TableOne(
 print(summary.tabulate(tablefmt = "fancy_grid"))
 ```
 
-*Note:* Batch_Assignment will return nBatches+1. If you specify 4 batches, you will get 5 batches, with batch #5 representing any left-over samples not assigned to other batches. There is no batchSize constraint on the left-over group. This approach is useful when total samples > `batchSize`*`nBatches` 
+*Note:* Batch_Assignment will include nBatches + 1 groups. For example, if you specify 4 batches, you will get 5, where batch #5 captures any leftover samples. This group does not follow the batchSize constraint. This is helpful when your total sample size exceeds batchSize * nBatches.
 
 ---
 
 # :flashlight:Troubleshooting 
 
-## Checking for outliers
+## Check for outliers
 1. Visually using a histogram `plt.hist(x)`  
-2. Through z-score conversion; $z>3.0$ could be concerning  
+2. Through z-score conversion; $z>3.0$ could indicate an outlier, though thresholds may vary depending on your data distribution
+
 $z = \frac{x - \mu}{\sigma}$  
  
 *Interpretation of z-scores:* Subject data normalized to represent the number of standard deviations they are from the mean, where a value of 0 indicates 'exactly at the mean'  
 
-## Checking cumulative calibration graph
+## Review cumulative calibration graph
 The calibration graph plots the known value for the calibrators on the x-axis and the value estimated by SIMOA on the y-axis.  
 This linear or non-linear relationship is used to 'calibrate', or fit/adjust, the actual participant values to reduce measurement error.
 
@@ -242,7 +241,7 @@ This linear or non-linear relationship is used to 'calibrate', or fit/adjust, th
 Lower and higher values are usually squashed, or level off, because the SIMOA fails to accurately measure high and low concentrations. If outliers exist, check if their absolute values exist in squashed regions of the calibration graph.
 
 
-## Checking values for samples run in multiple reps
+## Assess for variability across replicates
 *Run in multiple reps:* Some samples will be analyzed more than once by the SIMOA. For example, BDNF is run in 2 reps. This means you will have two BDNF concentration values for each sample. You use the mean of those values in the analysis, but a SD can also be calculated for that individual sample.  
 | Subject ID   | Concentration Rep #1  | Concentration Rep #2  | Mean Concentration | Standard Deviation |
 | ------------ | --------------------- | --------------------- | ------------------ | ------------------ |
@@ -252,7 +251,7 @@ Lower and higher values are usually squashed, or level off, because the SIMOA fa
 If the individual sample SD is large, then the concentrations obtained for that sample across reps were discrepant. This could explain why it is an outlier.  
 
 
-## Checking sample processor
+## Check sample processor
 Track the team member who processed the sample (centrifuged and aliquoted), then check if patterns emerge between team members.  
 
 <img src="figs/stripplot.png" alt="Example of processor bias" width="400">  
@@ -261,8 +260,8 @@ Track the team member who processed the sample (centrifuged and aliquoted), then
 sns.stripplot(x='Processor', y='Z-score', data=data)
 ```  
 
-## Checking the number of freeze/thaw cycles 
-Each freeze/thaw cycle has a risk of damaging the cell membrane. Damaged cell membranes can affect the stability of measurements, particularly because it can  artifically increase the degree of oxidative stress. >3 cycles could be concerning. Check with the team in charge of long-term sample storage for the number of freeze/thaw cycles.  
+## Verify the number of freeze/thaw cycles 
+Each freeze/thaw cycle has a risk of damaging the cell membrane. Damaged cell membranes can affect the stability of measurements, particularly as it can artificially elevate oxidative stress markers. >3 cycles could be concerning. Check with the team in charge of long-term sample storage for the number of freeze/thaw cycles.  
 
 ---
 
