@@ -172,7 +172,7 @@ data['Batch_Assignment'] = None
 
 ---
 
-# Use example
+# :factory:Use example
 
 ```python
 # Data 
@@ -224,7 +224,7 @@ print(summary.tabulate(tablefmt = "fancy_grid"))
 
 ---
 
-# Troubleshooting 
+# :flashlight:Troubleshooting 
 
 ## Checking for outliers
 1. Visually using a histogram `plt.hist(x)`  
