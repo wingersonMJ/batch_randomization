@@ -1,4 +1,4 @@
-# Plate Randomization for Longitudinal Data/Samples
+# Batch Randomization for Biological Samples in Longitudinal Data Analysis
 *Wingerson, MJ*
 
 ## Description
