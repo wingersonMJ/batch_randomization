@@ -111,14 +111,13 @@ def propensity_scores(data, subject_id, covariates, randomized_assignments):
 
 
 # Data 
-file_path = 'your_path'
-df = pd.read_excel(file_path)
+file_path = 'example_data.csv'
+df = pd.read_csv(file_path)
 
 # Adjust columns
-df['site'] = df['site'].astype('category')
-df['blinded_random_assignment'] = df['blinded_random_assignment'].astype('category')
-df['fivep_sex'] = df['fivep_sex'].replace({2: 1})
-df['fivep_sex'] = df['fivep_sex'].astype('category')
+df['location'] = df['location'].astype('category')
+df['intervention_group'] = df['intervention_group'].astype('category')
+df['sex'] = df['sex'].astype('category')
 print(df.head())
 
 # Random Assignment
@@ -127,13 +126,13 @@ assignments = randomAssignment(
                     subjectID = 'id', 
                     nVisits = 'nVisits', 
                     seed = 1989,
-                    nIter = 50000,
+                    nIter = 100,
                     batchSize = 34, 
                     nBatches = 4
                     )
 
 # Define factors for balancing (covariates)
-covariates = ['site', 'blinded_random_assignment', 'doi_to_v1', 'fivep_sex']  
+covariates = ['location', 'intervention_group', 'time_to_enrollment', 'sex']  
 
 # Propensity scores
 data, metrics = propensity_scores(
@@ -146,21 +145,21 @@ data, metrics = propensity_scores(
 # Summary
 summary = TableOne(
     data, 
-    columns= ['site', 'blinded_random_assignment', 'doi_to_v1', 'fivep_sex', 'nVisits'],
-    categorical= ['site', 'blinded_random_assignment', 'fivep_sex'],
-    continuous= ['doi_to_v1', 'nVisits'], 
-    groupby='Batch_Assignment',
-    pval=True,
-    decimals=2)
+    columns = covariates,
+    categorical = ['location', 'intervention_group', 'sex'],
+    continuous = ['time_to_enrollment'], 
+    groupby = 'Batch_Assignment',
+    pval = True,
+    decimals = 2)
 print(summary.tabulate(tablefmt = "fancy_grid"))
 
 # Summary w/out leftovers
-data_filtered = data[data['Batch_Assignment'] != 5]
+data_filtered = data[data['Batch_Assignment'] != 5] # nBatches+1
 summary2 = TableOne(
     data_filtered, 
-    columns= ['site', 'blinded_random_assignment', 'doi_to_v1', 'fivep_sex', 'nVisits'],
-    categorical= ['site', 'blinded_random_assignment', 'fivep_sex'],
-    continuous= ['doi_to_v1', 'nVisits'], 
+    columns= covariates,
+    categorical= ['location', 'intervention_group', 'sex'],
+    continuous= ['time_to_enrollment'], 
     groupby='Batch_Assignment',
     pval=True,
     decimals=2)
