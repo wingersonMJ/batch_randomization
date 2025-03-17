@@ -185,14 +185,14 @@ assignments = randomAssignment(
                     subjectID = 'id', 
                     nVisits = 'nVisits', 
                     seed = 1989,
-                    nIter = 50000,
+                    nIter = 100,
                     batchSize = 34, 
-                    nBatches = 4)
+                    nBatches = 3)
 ```
 
 Define factors for balancing:
 ```python
-covariates = ['site', 'blinded_random_assignment', 'doi_to_v1', 'fivep_sex']
+covariates = ['location', 'intervention_group', 'time_to_enrollment', 'sex']
 ```  
 
 Run the propensity_scores function:
@@ -209,16 +209,28 @@ A simple comparison of covariates across batches can be performed. This will ret
 ```python
 summary = TableOne(
     data, 
-    columns= ['site', 'blinded_random_assignment', 'doi_to_v1', 'fivep_sex', 'nVisits'],
-    categorical= ['site', 'blinded_random_assignment', 'fivep_sex'],
-    continuous= ['doi_to_v1', 'nVisits'], 
+    columns= covariates,
+    categorical= ['location', 'intervention_group', 'sex'],
+    continuous= ['time_to_enrollment'], 
     groupby='Batch_Assignment',
     pval=True,
     decimals=2)
 print(summary.tabulate(tablefmt = "fancy_grid"))
 ```
 
-*Note:* Batch_Assignment will include nBatches + 1 groups. For example, if you specify 4 batches, you will get 5, where batch #5 captures any leftover samples. This group does not follow the batchSize constraint. This is helpful when your total sample size exceeds batchSize * nBatches.
+**Below is an example output from the TableOne library:**
+|                               |    | Missing   | Overall      | 1            | 2            | 3            | 4            | P-Value   |
+|-------------------------------|----|-----------|--------------|--------------|--------------|--------------|--------------|-----------|
+| n                             |    |           | 50           | 17           | 15           | 17           | 1            |           |
+| location, n (%)               | 0  |           | 28 (56.00)   | 9 (52.94)    | 9 (60.00)    | 10 (58.82)   |              | 0.685     |
+|                               | 1  |           | 22 (44.00)   | 8 (47.06)    | 6 (40.00)    | 7 (41.18)    | 1 (100.00)   |           |
+| intervention_group, n (%)     | 0  |           | 29 (58.00)   | 9 (52.94)    | 9 (60.00)    | 11 (64.71)   |              | 0.594     |
+|                               | 1  |           | 21 (42.00)   | 8 (47.06)    | 6 (40.00)    | 6 (35.29)    | 1 (100.00)   |           |
+| time_to_enrollment, mean (SD) |    | 0         | 12.44 (4.69) | 12.59 (4.56) | 12.53 (5.32) | 12.24 (4.67) | 12.00 (0.00) | 0.996     |
+| sex, n (%)                    | 0  |           | 26 (52.00)   | 8 (47.06)    | 8 (53.33)    | 10 (58.82)   |              | 0.665     |
+|                               | 1  |           | 24 (48.00)   | 9 (52.94)    | 7 (46.67)    | 7 (41.18)    | 1 (100.00)   |           |
+
+*Note:* Batch_Assignment will include nBatches + 1 groups. For example, if you specify 3 batches, you will get 4, where batch #4 captures any leftover samples. This group does not follow the batchSize constraint. This is helpful when your total sample size exceeds batchSize * nBatches.
 
 ---
 
