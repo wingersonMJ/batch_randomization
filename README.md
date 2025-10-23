@@ -292,3 +292,4 @@ Each freeze/thaw cycle has a risk of damaging the cell membrane. Damaged cell me
 Neuro 4-plex (N4PA; GFAP, Tau, UCH-L1, NF-Light): 34 tests, 6-month shelf life  
 Cytokine 4-plex (Cyto 4P; IL1-Beta, IL-6, IL-10, TNF-Alpha): 34 tests, 12-month shelf life  
 BDNF: 68 tests across 2 plates, 6-month shelf life  
+MSD (IGF-1): 36 tests
